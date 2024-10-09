@@ -1,30 +1,51 @@
 import gradio as gr
+import plotly.express as px
 
+def start_model_engine(model):
+    pass
 
-def predict_trend(model, df): 
-    # initialize Chronos Engine
-    if "chronos" in model:
-        pass
+def predict_trend(model, symbol_folder, symbol):
+    # Initialise model engine
+    engine = start_model_engine(model)
+
+    df = get_df_for_symbol(symbol_folder, symbol)
+    if df.empty:
+        return "Error fetching data. Please try again."
+    
+    # engine prediction
+    #######################
+    # will be implemented #
+    #######################
+
+    # Create a Plotly figure
+    fig = px.line(df, x='date', y='price', title=f'{symbol} Price Trend')
+    fig.update_layout(xaxis_title='Date', yaxis_title='Price (USD)')
+
+    return fig
+
         
 
 def get_df_for_symbol(symbol_folder, symbol):
     if symbol_folder == "crypto":
-        pass
+        if symbol == "BTC":
+            from symbols.crypto.btc import btc
+            return btc()            
+        else:
+            raise ValueError("Symbol not yet supported")
+        
     elif symbol_folder == "forex":
         pass
-    elif symbol_folder == "malaysia_stocks":
-        pass
-    elif symbol_folder == "us_stocks":
+    elif symbol_folder == "stocks":
         pass
         
 
 # Function to get available models
 def get_models():
-    return ["chronos-tiny", "chronos-small"]
+    return ["amazon/chronos-t5-tiny"]
 
 # Function to get symbol folders
 def get_symbol_folders():
-    return ["crypto", "forex", "malaysia_stocks", "us_stocks"]
+    return ["crypto", "forex", "stocks"]
 
 # Function to get symbols from a specific folder
 def get_symbols(folder):
@@ -32,9 +53,7 @@ def get_symbols(folder):
         return ["BTC", "ETH", "ADA"]
     elif folder == "forex":
         return ["EURUSD", "GBPUSD", "USDJPY"]
-    elif folder == "malaysia_stocks":
-        return ["MYEG", "TOPGLOV", "HARTA"]
-    elif folder == "us_stocks":
+    elif folder == "stocks":
         return ["AAPL", "TSLA", "MSFT"]
     else:
         return []
@@ -56,13 +75,11 @@ with gr.Blocks() as demo:
     folder_dropdown.change(fn=update_symbols, inputs=folder_dropdown, outputs=symbol_dropdown)
 
     predict_button = gr.Button("Predict Trend")
-    output = gr.Textbox(label="Prediction Result")
-    
-    df = get_df_for_symbol(folder_dropdown, symbol_dropdown)
+    output = gr.Plot(label="Price Trend")
 
     # Perform prediction when button is clicked
     predict_button.click(fn=predict_trend, 
-                         inputs=[model_dropdown, df], 
+                         inputs=[model_dropdown, folder_dropdown, symbol_dropdown], 
                          outputs=output)
 
-demo.launch(share=True)
+demo.launch()
