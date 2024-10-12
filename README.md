@@ -44,6 +44,15 @@ LLMTrader is an advanced trading assistant powered by Large Language Models (LLM
 ## News Corner
 
 <details>
+<summary>12 Oct 2024: Support APPL now!</summary>
+
+LLMTrader is currently in active development. As of now, it supports:
+
+- Historical analysis for Bitcoin (BTC) and Apple Stock (APPL)
+- AI-driven predictions using selected LLM models
+
+</details>
+<details>
 <summary>9 Oct 2024: Support BTC now!</summary>
 
 LLMTrader is currently in active development. As of now, it supports:
@@ -51,9 +60,8 @@ LLMTrader is currently in active development. As of now, it supports:
 - Historical analysis for Bitcoin (BTC)
 - AI-driven predictions using selected LLM models
 
-We are continuously working on expanding our asset coverage and improving our prediction algorithms. Stay tuned for updates!
-
 </details>
+We are continuously working on expanding our asset coverage and improving our prediction algorithms. Stay tuned for updates!
 
 ## Contributing
 
