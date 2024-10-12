@@ -37,7 +37,7 @@ LLMTrader is an advanced trading assistant powered by Large Language Models (LLM
 
 | Symbol | Company | Status |
 |--------|---------|--------|
-| AAPL | Apple Inc. | ❌ |
+| AAPL | Apple Inc. | ✅ |
 | GOOGL | Alphabet Inc. | ❌ |
 | MSFT | Microsoft Corporation | ❌ |
 
