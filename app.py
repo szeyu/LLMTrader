@@ -36,7 +36,11 @@ def get_df_for_symbol(symbol_folder, symbol):
     elif symbol_folder == "forex":
         pass
     elif symbol_folder == "stocks":
-        pass
+        if symbol == "AAPL":
+            from symbols.stocks.APPL import appl
+            return appl()
+        else:
+            raise ValueError("Stock symbol not yet supported")
         
 
 # Function to get available models
