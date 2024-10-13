@@ -31,16 +31,25 @@ def get_df_for_symbol(symbol_folder, symbol):
             from symbols.crypto.btc import btc
             return btc()            
         else:
-            raise ValueError("Symbol not yet supported")
+            raise ValueError(f"Crypto symbol '{symbol}' not yet supported")
         
     elif symbol_folder == "forex":
-        pass
+        if symbol == "USDMYR":
+            from symbols.forex.USDMYR import usd_myr
+            return usd_myr()            
+        else:
+            raise ValueError(f"Forex symbol '{symbol}' not yet supported")
+            
     elif symbol_folder == "stocks":
         if symbol == "AAPL":
             from symbols.stocks.APPL import appl
             return appl()
         else:
-            raise ValueError("Stock symbol not yet supported")
+            raise ValueError(f"Stock symbol '{symbol}' not yet supported")
+    
+    else:
+        raise ValueError(f"Symbol folder '{symbol_folder}' not yet supported")
+
         
 
 # Function to get available models
@@ -56,7 +65,7 @@ def get_symbols(folder):
     if folder == "crypto":
         return ["BTC", "ETH", "ADA"]
     elif folder == "forex":
-        return ["EURUSD", "GBPUSD", "USDJPY"]
+        return ["EURUSD", "USDMYR", "USDJPY"]
     elif folder == "stocks":
         return ["AAPL", "TSLA", "MSFT"]
     else:
