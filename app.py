@@ -1,8 +1,16 @@
 import gradio as gr
-import plotly.express as px
+import numpy as np
+import plotly.graph_objects as go
+import pandas as pd
 
 def start_model_engine(model):
-    pass
+    if "chronos" in model:
+        from models.chronosEngine import ChronosEngine
+        
+        return ChronosEngine(model)
+    
+    else:
+        raise ValueError(f"Model '{model}' not yet supported")
 
 def predict_trend(model, symbol_folder, symbol):
     # Initialise model engine
@@ -11,15 +19,37 @@ def predict_trend(model, symbol_folder, symbol):
     df = get_df_for_symbol(symbol_folder, symbol)
     if df.empty:
         return "Error fetching data. Please try again."
-    
-    # engine prediction
-    #######################
-    # will be implemented #
-    #######################
 
-    # Create a Plotly figure
-    fig = px.line(df, x='date', y='price', title=f'{symbol} Price Trend')
-    fig.update_layout(xaxis_title='Date', yaxis_title='Price (USD)')
+    # engine prediction
+    # Generate the forecast
+    forecast = engine.predict(df, column_name="price", prediction_length=12)
+
+    # Extract forecast data
+    last_date = df['date'].iloc[-1]
+    forecast_dates = pd.date_range(start=last_date + pd.Timedelta(days=1), periods=12)
+    low, median, high = np.quantile(forecast[0].numpy(), [0.1, 0.5, 0.9], axis=0)
+
+    # Plot the result using Plotly
+    fig = go.Figure()
+
+    # Add historical data
+    fig.add_trace(go.Scatter(x=df['date'], y=df['price'], mode='lines', name='Historical Data', line=dict(color='royalblue')))
+
+    # Add median forecast
+    fig.add_trace(go.Scatter(x=forecast_dates, y=median, mode='lines', name='Median Forecast', line=dict(color='tomato')))
+
+    # Add prediction interval
+    fig.add_trace(go.Scatter(x=forecast_dates, y=low, fill=None, mode='lines', line=dict(color='tomato', width=0), showlegend=False))
+    fig.add_trace(go.Scatter(x=forecast_dates, y=high, fill='tonexty', mode='lines', line=dict(color='tomato', width=0), name='Prediction Interval', opacity=0.3))
+
+    # Set layout
+    fig.update_layout(
+        title=f'{symbol} Price Trend and Forecast',
+        xaxis_title='Date',
+        yaxis_title='Price (USD)',
+        showlegend=True,
+        xaxis_range=[df['date'].min(), forecast_dates[-1]]  # Set x-axis range from start of data to end of forecast
+    )
 
     return fig
 
@@ -54,7 +84,7 @@ def get_df_for_symbol(symbol_folder, symbol):
 
 # Function to get available models
 def get_models():
-    return ["amazon/chronos-t5-tiny"]
+    return ["amazon/chronos-t5-tiny", "amazon/chronos-t5-mini"]
 
 # Function to get symbol folders
 def get_symbol_folders():

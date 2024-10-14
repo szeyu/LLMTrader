@@ -26,21 +26,6 @@ class ChronosEngine:
 
         return forecast
 
-    def plot_forecast(self, df, forecast, column_name="closed price"):
-        forecast_index = range(len(df), len(df) + forecast.shape[2])
-        low, median, high = np.quantile(forecast[0].numpy(), [0.1, 0.5, 0.9], axis=0)
-
-        plt.figure(figsize=(12, 6))
-        plt.plot(df[column_name], color="royalblue", label="historical data")
-        plt.plot(forecast_index, median, color="tomato", label="median forecast")
-        plt.fill_between(forecast_index, low, high, color="tomato", alpha=0.3, label="80% prediction interval")
-        plt.legend()
-        plt.grid()
-        plt.title(f"Forecast for {self.model_name}")
-        plt.xlabel("Time")
-        plt.ylabel(column_name)
-        plt.show()
-
     @staticmethod
     def print_predict_docstring():
         print(ChronosPipeline.predict.__doc__)
